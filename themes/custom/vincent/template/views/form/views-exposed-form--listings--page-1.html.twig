@@ -1,0 +1,38 @@
+<div class="form-inline form-ejike p-1">
+
+  <div class="form-item form-type-select form-item-field-category col-sm-2 mt-0 mb-0 pl-0">
+    <i class="fa fa-bars"></i>
+
+    {# -- display field category -- #}
+    {{ form.field_category }}
+    {# -- /display field category -- #}
+
+  </div>
+  <div class="input-group mb-2 col pr-0 pl-0 keyword">
+    <div class="input-group-prepend">
+      <div class="input-group-text"><i class="fa fa-key mr-2" aria-hidden="true"></i>What?</div>
+    </div>
+
+    {# -- display fulltext search one -- #}
+    {{ form.search_api_fulltext }}
+    {# -- /display fulltext search one -- #}
+
+  </div>
+  <div class="input-group mb-2 col pr-0 pl-0 address">
+    <div class="input-group-prepend">
+      <div class="input-group-text"><i class="fa fa-location-arrow mr-2"></i>Where?</div>
+    </div>
+
+    {# -- display fulltext search two -- #}
+    {{ form.search_api_fulltext_1 }}
+    {# -- /display fulltext search two -- #}
+
+  </div>
+  {{ form.actions }}
+
+  {# -- display form children -- #}
+  {{ form.form_build_id }}
+  {{ form.form_token }}
+  {{ form.form_id }}
+  {# -- /display form children -- #}
+</div>

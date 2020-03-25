@@ -1,0 +1,261 @@
+{#
+/**
+ * @file
+ * Theme override to display a node.
+ *
+ * Available variables:
+ * - node: The node entity with limited access to object properties and methods.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - node.getCreatedTime() will return the node creation timestamp.
+ *   - node.hasField('field_example') returns TRUE if the node bundle includes
+ *     field_example. (This does not indicate the presence of a value in this
+ *     field.)
+ *   - node.isPublished() will return whether the node is published or not.
+ *   Calling other methods, such as node.delete(), will result in an exception.
+ *   See \Drupal\node\Entity\Node for a full list of public properties and
+ *   methods for the node object.
+ * - label: The title of the node.
+ * - content: All node items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - author_picture: The node author user entity, rendered using the "compact"
+ *   view mode.
+ * - metadata: Metadata for this node.
+ * - date: Themed creation date field.
+ * - author_name: Themed author name field.
+ * - url: Direct URL of the current node.
+ * - display_submitted: Whether submission information should be displayed.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - node: The current template type (also known as a "theming hook").
+ *   - node--type-[type]: The current node type. For example, if the node is an
+ *     "Article" it would result in "node--type-article". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - node--view-mode-[view_mode]: The View Mode of the node; for example, a
+ *     teaser would result in: "node--view-mode-teaser", and
+ *     full: "node--view-mode-full".
+ *   The following are controlled through the node publishing options.
+ *   - node--promoted: Appears on nodes promoted to the front page.
+ *   - node--sticky: Appears on nodes ordered above other non-sticky nodes in
+ *     teaser listings.
+ *   - node--unpublished: Appears on unpublished nodes visible only to site
+ *     admins.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - content_attributes: Same as attributes, except applied to the main
+ *   content tag that appears in the template.
+ * - author_attributes: Same as attributes, except applied to the author of
+ *   the node tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - view_mode: View mode; for example, "teaser" or "full".
+ * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
+ * - page: Flag for the full page state. Will be true if view_mode is 'full'.
+ * - readmore: Flag for more state. Will be true if the teaser content of the
+ *   node cannot hold the main body content.
+ * - logged_in: Flag for authenticated user status. Will be true when the
+ *   current user is a logged-in member.
+ * - is_admin: Flag for admin user status. Will be true when the current user
+ *   is an administrator.
+ *
+ * @see template_preprocess_node()
+ *
+ * @todo Remove the id attribute (or make it a class), because if that gets
+ *   rendered twice on a page this is invalid CSS for example: two lists
+ *   in different view modes.
+ */
+#}
+{% set base_url = elements.host ~ '/' %}
+{% set node_img = node.field_image2 %}
+{% set location = node.field_town.entity.field_town.value ~ ', ' ~ node.field_city.entity.field_city.value %}
+{% set ad_image = random_ad.img %}
+
+<article{{ attributes }}>
+  <div class="node-listing">
+
+    <div class="row">
+
+      {# -- breadcrumb -- #}
+      <div class="col-12 col-lg-11 ml-auto mr-auto">
+        <div class="breadcrumb-row mb-4">
+          <i class="fa fa-home"></i>{{ custom_breadcrumb }}
+        </div>
+      </div>
+      {# -- /breadcrumb -- #}
+
+      {# -- main content -- #}
+      <div class="col-12 col-lg-8 ml-auto">
+        <div class="listing-info">
+
+          {# -- display ad image -- #}
+          <img class="img-fluid" src="{{ file_url(node_img.entity.uri.value) }}" alt="{{ node_img.0.alt }}" width="" height="">
+          {# -- /display content image -- #}
+
+          <div class="descrip">
+            {# -- display ad user interface -- #}
+            <div class="view-count text-center">
+              <div class="cont row">
+                <div class="views col mr-2"><i class="fa fa-eye mr-2"></i>458 views</div>
+                <div class="watch-list col mr-2"><i class="fa fa-star mr-2"></i>Add to watchlist</div>
+                <div class="post col mr-2"><i class="fa fa-copy mr-2"></i>Post similar ad</div>
+                <div class="make-offer col mr-3"><i class="fa fa-hand-o-left mr-2" aria-hidden="true"></i><div class="offer-count"><span>12</span></div>Make an offer</div>
+                <div class="report-ad col ml-2"><i class="fa fa-flag mr-2"></i>Report this ad</div>
+              </div>
+            </div>
+            {# -- /display ad user interface -- #}
+
+            {# -- display ad informations -- #}
+            <div class="useful-info p-4">
+              <div class="address pr-4">
+                <img class="mr-1" src={{ base_url ~ 'themes/custom/vincent/img/place.png' }}>{{ location }}
+              </div>
+              <div class="created-date pl-4 pr-4"><i class="fa fa-calendar mr-2" aria-hidden="true"></i>{{ elements.created_date }}</div>
+              <div class="category pl-4">
+                <i class="fa fa-bars mr-2"></i>
+                {{ node.field_category.entity.name.value }}
+              </div>
+              <div class="title mt-4">{{ elements.title }}</div>
+              <div class="body mt-4">{{ elements.body }}</div>
+              <div class="price">{{ '$' ~ node.field_price3.entity.field_price3.value }}</div>
+            </div>
+            {# -- /display ad informations -- #}
+
+            {# -- display table informations -- #}
+            <div class="cust-tabs">
+              <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                <li class="nav-item mr-2">
+                  <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Ad Details</a>
+                </li>
+                <li class="nav-item mr-2">
+                  <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Ad Video</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Ad Description</a>
+                </li>
+              </ul>
+              <div class="tab-content" id="pills-tabContent">
+                <div class="row pl-2 pr-2">
+                  <div class="col-sm-6">
+                    <table class="table table-striped">
+                      <tbody>
+                      <tr>
+                        <td class="text-left cust-left">Mark</td>
+                        <td class="text-right cust-right">Otto</td>
+                      </tr>
+                      <tr>
+                        <td class="text-left cust-left">Jacob</td>
+                        <td class="text-right cust-right">Thornton</td>
+                      </tr>
+                      <tr>
+                        <td class="text-left cust-left">Lary</td>
+                        <td class="text-right cust-right">Bird</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-sm-6">
+                    <table class="table table-striped">
+                      <tbody>
+                      <tr>
+                        <td class="text-left cust-left">Mark</td>
+                        <td class="text-right cust-right">Otto</td>
+                      </tr>
+                      <tr>
+                        <td class="text-left cust-left">Jacob</td>
+                        <td class="text-right cust-right">Thornton</td>
+                      </tr>
+                      <tr>
+                        <td class="text-left cust-left">Lary</td>
+                        <td class="text-right cust-right">Bird</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {# -- /display table informations -- #}
+
+          </div>
+        </div>
+      </div>
+      {# -- /main content -- #}
+
+      {# -- side content -- #}
+      <div class="col-sm-3 d-none d-lg-block mr-auto">
+        <div class="sidebar-info">
+          <div class="user-info">
+            <div class="row ml-0 mb-2">
+
+              {# -- display profile picture -- #}
+              <div class="col-sm-4 pl-0">
+                <img class="img-fluid profile-pic" src={{ base_url ~ 'themes/custom/vincent/img/user.JPG' }}>
+              </div>
+              {# -- /display profile picture -- #}
+
+              {# -- display verified user icon -- #}
+              <div class="col pl-0">
+                <img class="img-fluid verified" src={{ base_url ~ 'themes/custom/vincent/img/verified_user.png' }}>
+                <div class="username">{{ elements.user.name }}</div>
+                <div class="seen">
+                  <div class="last-seen">Last seen:</div>
+                  <div class="days">2 days ago</div>
+                </div>
+                <div class="all-members">All member ads (5) <i class="fa fa-level-up"></i></div>
+              </div>
+              {# -- /display verified user icon -- #}
+
+            </div>
+
+            <div class="row ml-0">
+
+              {# -- display user mobile information -- #}
+              <div class="col-sm-2 mobile"><i class="fa fa-mobile" aria-hidden="true"></i></div>
+              <div class="col mobile2 mr-2">
+                <div class="numbers p-3">
+                  <div class="number">{{ '+44' ~ elements.user.mobile }}</div>
+                  <div class="show-number">click to show number</div>
+                </div>
+              </div>
+              {# -- /display user mobile information -- #}
+
+            </div>
+
+            <div class="row ml-0">
+
+              {# -- display user email information -- #}
+              <div class="col-sm-2 mobile"><i class="fa fa-envelope"></i></div>
+              <div class="col mobile2 mr-2">
+                <div class="email p-3">
+                  <div class="number">{{ elements.user.email }}</div>
+                  <div class="show-email">click to show email</div>
+                </div>
+              </div>
+              {# -- /display user email information -- #}
+
+            </div>
+          </div>
+
+          {# -- display random ad informations -- #}
+          <div class="rand-ads mt-3">
+            <div class="image">
+              <div class="adv-hover text-center">ad</div>
+              <img class="img-fluid" src="{{ file_url(ad_image.entity.uri.value) }}" alt="{{ ad_image.alt }}" width="{{ ad_image.width }}" height="{{ ad_image.height }}">
+            </div>
+            <div class="price">{{ '$' ~ random_ad.price.0.value }}</div>
+            <div class="title">{{ random_ad.title.0.value }}</div>
+          </div>
+          {# -- /display random ad informations -- #}
+
+        </div>
+      </div>
+      {# -- /side content -- #}
+
+    </div>
+  </div>
+</article>

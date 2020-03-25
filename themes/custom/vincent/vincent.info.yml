@@ -1,0 +1,30 @@
+name: vincent
+type: theme
+description: 'My Awesome theme'
+package: Other
+core: 8.x
+libraries:
+#  - vincent/global-styling
+  - vincent/bootstrap-cdn
+  - vincent/vincent
+
+base theme: stable
+
+regions:
+  header: Header
+  banner: Banner
+  highlighted: Highlighted
+  content: content
+  content_ads_first: Content Ads First
+  content_ads_second: Content Ads Second
+  content_ads_third: Content Ads Third
+  content_exposed_form: Exposed Form Content
+  content_listings: Content Listings
+  left_sidebar: Left Sidebar
+  right_sidebar: Right Sidebar
+  sponsor: Sponsors
+  footer_top: Footer Top
+  footer_bottom_one: Footer Bottom One
+  footer_bottom_two: Footer Bottom Two
+  footer_bottom_three: Footer Bottom Three
+  footer_bottom_four: Footer Bottom Four

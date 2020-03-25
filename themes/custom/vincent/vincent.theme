@@ -1,0 +1,113 @@
+<?php
+
+/**
+ * Implements hook_preprocess_page() for page.html.twig.
+ */
+function vincent_preprocess_page(array &$variables) {
+
+  // Get site url
+  $host = \Drupal::request()->getSchemeAndHttpHost();
+  $variables['elements']['host'] = $host;
+
+  // D8 equivalent of arg()
+  $current_path = \Drupal::service('path.current')->getPath();
+  $path_args = explode('/', $current_path);
+  $arg = $path_args[1];
+  $variables['page']['arg'] = $arg;
+
+  // Responsive bootstrap class for 'left_sidebar, content and right_sidebar'
+  if (!empty($variables['page']['left_sidebar']) && !empty($variables['page']['right_sidebar'])) {
+    $variables['leftsidebarclass'] = 'col-md-4 col-lg-3 mb-4';
+    $variables['contentclass'] = 'col';
+    $variables['rightsidebarclass'] = 'col-sm-3';
+  }
+  elseif (!empty($variables['page']['left_sidebar'])) {
+    $variables['leftsidebarclass'] = 'col-md-4 col-lg-3 mb-4';
+    $variables['contentclass'] = 'col';
+  }
+  elseif (!empty($variables['page']['right_sidebar'])) {
+    $variables['rightsidebarclass'] = 'col-sm-3';
+    $variables['contentclass'] = 'col';
+  }
+  else {
+    $variables['contentclass'] = 'col-sm-12';
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function vincent_preprocess_node(array &$variables) {
+  $variables['elements']['field_town']['#title'] = '';
+  $variables['elements']['field_city']['#title'] = '';
+
+  // created date
+  $node = $variables['node']->get('created')->getValue();
+  $date = $node[0]['value'];
+  $month = date('M', $date).'. ';
+  $day = date('j', $date).'. ';
+  $year = date('Y', $date).'.';
+  $variables['elements']['created_date'] = $month.$day.$year;
+
+  $titleArray = $variables['node']->get('title')->getValue();
+  $variables['elements']['title'] = $titleArray[0]['value'];
+
+  $variables['elements']['user']['name'] = $variables['user']->getAccount()->name;
+  $variables['elements']['user']['email'] = $variables['user']->getAccount()->getEmail();
+  $variables['elements']['user']['mobile'] = $mobile = $variables['user']->getAccount()->mobile;
+
+  // Get site url
+  $host = \Drupal::request()->getSchemeAndHttpHost();
+  $variables['elements']['host'] = $host;
+
+  // Create 'is_front' variable inside $variables
+  $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+
+  // load nodes of 'listing' type
+  $nids = \Drupal::entityQuery('node')->condition('type','listing')->execute();
+  $random_nid = array_rand($nids, 1);
+  $one_node =  \Drupal\node\Entity\Node::load($random_nid); // to load multiple nodes use \Drupal\node\Entity\Node::loadMultiple($nids)
+  $variables['random_ad']['title'] = $one_node->get('title')->getValue();
+  $variables['random_ad']['price'] = $one_node->get('field_price3')->getValue();
+  $variables['random_ad']['img'] = $one_node->get('field_image2');
+
+  // create custom breadcrumb
+  if (($variables['is_front'] == FALSE) && ($variables['node']->getType() == 'listing')) {
+    $variables['custom_breadcrumb'] = [
+      '#markup' => '<div class="brdcrmb ml-2"><a href="https://dev-ager8.pantheonsite.io/">Home</a>'.'<span class="arrow ml-1 mr-1">'.' > </span>'.' Listing</div>',
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view()
+ */
+function vincent_preprocess_views_view(&$variables) {
+
+  // create breadcrumb for views page templates
+  if ($variables['id'] == 'listings') {
+    $variables['custom_breadcrumb'] = [
+      '#markup' => '<div class="brdcrmb ml-2"><a href="https://dev-ager8.pantheonsite.io/">Home</a>'.'<span class="arrow ml-1 mr-1">'.' > </span>'.' Listing</div>',
+    ];
+    $variables['pager']['#theme_wrappers'] = array();
+  }
+}
+
+/**
+ * Implements hook_form_alter()
+ */
+function vincent_form_alter(&$form, &$form_state, $form_id) {
+  if($form['#id'] == 'views-exposed-form-listings-page-1') {
+    $form['field_category']['#theme_wrappers'] = array();
+    $form['field_category']['#options']['All'] = t('Category');
+    $form['search_api_fulltext']['#theme_wrappers'] = array();
+    $form['search_api_fulltext']['#attributes']['class'] = array('form-control');
+    $form['search_api_fulltext']['#attributes']['placeholder'] = array('(keyword, e.g. car)');
+    $form['search_api_fulltext_1']['#theme_wrappers'] = array();
+    $form['search_api_fulltext_1']['#attributes']['class'] = array('form-control');
+    $form['search_api_fulltext_1']['#attributes']['placeholder'] = array('(city, address...)');
+    $form['actions']['#theme_wrappers'] = array();
+    $form['actions']['submit']['#attributes']['class'] = array('btn', 'btn-primary', 'col-sm-2', 'ml-2', 'mb-2');
+    $form['actions']['submit']['#value'] = t('Search');
+  }
+}

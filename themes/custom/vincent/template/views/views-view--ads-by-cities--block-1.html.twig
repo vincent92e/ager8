@@ -1,0 +1,104 @@
+{#
+/**
+ * @file
+ * Default theme implementation for main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A css-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="ads-by-cities">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-sm-10 ml-auto mr-auto">
+        <div class="cities-container">
+          <h2 class="text-center">Browse by cities</h2>
+          <p class="text-center">Checkout the most popular searches by <span class="custom">cities</span></p>
+          <div class="row mb-3">
+
+            {# -- Iterate view rows -- #}
+            {% for row in rows.0['#rows'] %}
+              {% set city_image = row['#row']._entity.field_city_image %}
+
+              {# -- display content for first three rows -- #}
+              {% if loop.index0 <= 2 %}
+                <div class="col-md-6 col-lg-4 city mb-3">
+                  <div class="individual-city">
+                    <div class="image"><img class="img-fluid" src="{{ file_url(city_image.entity.uri.value) }}" alt="{{ city_image.0.alt }}" width="{{ city_image.0.width }}" height="{{ city_image.0.height }}"></div>
+                    <div class="combined-cont">
+                      <div class="city mb-1">{{ row['#row'].node__field_city_field_city_value }}</div>
+                      <div class="ads">{{ row['#row'].nodeviewcount_nid ~ ' ads' }}</div>
+                    </div>
+                    <div class="overlay"></div>
+                  </div>
+                </div>
+              {% endif %}
+              {# -- /display content for first three rows -- #}
+
+              {# -- display content for fourth rows -- #}
+              {% if loop.index0 == 3 %}
+                <div class="col-md-6 col-lg-6 city mb-3">
+                  <div class="individual-city">
+                    <div class="image"><img class="img-fluid" src="{{ file_url(city_image.entity.uri.value) }}" alt="{{ city_image.0.alt }}" width="{{ city_image.0.width }}" height="{{ city_image.0.height }}"></div>
+                    <div class="combined-cont">
+                      <div class="city mb-1">{{ row['#row'].node__field_city_field_city_value }}</div>
+                      <div class="ads">{{ row['#row'].nodeviewcount_nid ~ ' ads' }}</div>
+                    </div>
+                    <div class="overlay"></div>
+                  </div>
+                </div>
+              {% endif %}
+              {# -- /display content for fourth rows -- #}
+
+              {# -- display content for the remaining rows -- #}
+              {% if loop.index0 > 3 %}
+                <div class="col col-lg-6 city">
+                  <div class="individual-city">
+                    <div class="image"><img class="img-fluid" src="{{ file_url(city_image.entity.uri.value) }}" alt="{{ city_image.0.alt }}" width="{{ city_image.0.width }}" height="{{ city_image.0.height }}"></div>
+                    <div class="combined-cont">
+                      <div class="city mb-1">{{ row['#row'].node__field_city_field_city_value }}</div>
+                      <div class="ads">{{ row['#row'].nodeviewcount_nid ~ ' ads' }}</div>
+                    </div>
+                    <div class="overlay"></div>
+                  </div>
+                </div>
+              {% endif %}
+              {# -- display content for the remaining rows -- #}
+
+            {% endfor %}
+            {# -- /Iterate view rows -- #}
+
+          </div>
+          <div class="text-center button"><a class="agr-btn btn btn-primary mt-4" href="#" role="button">All Locations</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

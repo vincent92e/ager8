@@ -1,0 +1,84 @@
+{#
+/**
+ * @file
+ * Default theme implementation for main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A css-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="featuredad">
+  <div class="row">
+    {# -- Iterate view rows -- #}
+    {% for row in rows.0['#rows'] %}
+      {% set ad_image = row['#row']._entity.field_image2 %}
+      {% set ad_town = row['#row']._entity.field_town %}
+      {% set ad_city = row['#row']._entity.field_city %}
+      {% set ad_title = row['#row']._entity.title %}
+      {% set ad_nid = row['#row']._entity.nid %}
+      {% set ad_price = row['#row']._entity.field_price3 %}
+
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="individual-ad mb-3">
+
+          {# -- display ad image -- #}
+          {% if ad_image %}
+            <div class="image"><div class="adv-hover text-center">ad</div><a href="{{ front ~ 'node/' ~ ad_nid.entity.nid.value }}"><img class="img-fluid" src="{{ file_url(ad_image.entity.uri.value) }}" alt="{{ ad_image.0.alt }}" width="{{ ad_image.0.width }}" height="{{ ad_image.0.height }}"></a></div>
+          {% endif %}
+          {# -- /display ad image -- #}
+
+          <div class="ad-cont p-3">
+
+            {# -- display ad location -- #}
+            {% if ad_town %}
+              <div class="address mb-3">
+                <img class="mr-1" alt="" src={{ front_page ~ 'themes/custom/vincent/img/place.png' }}>{{ ad_town.entity.field_town.value ~ ', ' ~ ad_city.entity.field_city.value }}
+              </div>
+            {% endif %}
+            {# -- /display ad location -- #}
+
+            {# -- display ad title -- #}
+            {% if ad_title %}
+              <div class="title mb-3">{{ ad_title.entity.title.value }}</div>
+            {% endif %}
+            {# -- /display ad title -- #}
+
+            {# -- display ad price -- #}
+            {% if ad_price %}
+              <div class="price">{{ '$' ~ ad_price.entity.field_price3.value }}</div>
+            {% endif %}
+            {# -- /display ad price -- #}
+            <div class="star"><i class="fa fa-star"></i></div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    {# -- /Iterate view rows -- #}
+
+  </div>
+</div>

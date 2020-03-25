@@ -1,0 +1,86 @@
+{#
+/**
+ * @file
+ * Default theme implementation for main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A css-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ *
+ * @ingroup themeable
+ */
+#}
+
+<div class="listings-content ml-1">
+
+  <div class="row">
+    <div class="col">
+      <div class="breadcrumb-row mb-4">
+        <i class="fa fa-home">{{ custom_breadcrumb }}</i>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    {# -- Iterate view rows -- #}
+    {% for row in rows.0['#rows'] %}
+      {% set ad_image = row['#row']._object.entity.field_image2 %}
+      {% set ad_town = row['#row']._object.entity.field_town %}
+      {% set ad_city = row['#row']._object.entity.field_city %}
+      {% set ad_title = row['#row']._object.entity.title %}
+      {% set ad_nid = row['#row']._object.entity.nid %}
+      {% set ad_price = row['#row']._object.entity.field_price3 %}
+
+      <div class="col-6 col-md-6 col-lg-4 mb-3">
+
+        {# -- Display only when image is available -- #}
+        {% if ad_image %}
+          <div class="individual-ad">
+            <div class="image"><div class="adv-hover text-center">ad</div><a href="{{ front ~ 'node/' ~ ad_nid.entity.nid.value }}"><img class="img-fluid" src="{{ file_url(ad_image.entity.uri.value) }}" alt="{{ ad_image.0.alt }}" width="{{ ad_image.0.width }}" height="{{ ad_image.0.height }}"></a></div>
+            <div class="ad-cont p-3">
+              <div class="address mb-3">
+                <img class="mr-1" alt="" src={{ front_page ~ 'themes/custom/vincent/img/place.png' }}>{{ ad_town.entity.field_town.value ~ ', ' ~ ad_city.entity.field_city.value }}
+              </div>
+              <div class="title mb-3">{{ ad_title.entity.title.value }}</div>
+              <div class="price">{{ '$' ~ ad_price.entity.field_price3.value }}</div>
+              <div class="star"><i class="fa fa-star"></i></div>
+            </div>
+          </div>
+        {% endif %}
+        {# -- /Display only when image is available -- #}
+
+      </div>
+    {% endfor %}
+    {# -- /Iterate view rows -- #}
+  </div>
+
+  {# -- Display pager element -- #}
+  <div class="row listings-pager mt-auto">
+    <div class="col">{{ pager }}</div>
+  </div>
+  {# -- /Display pager element -- #}
+
+</div>

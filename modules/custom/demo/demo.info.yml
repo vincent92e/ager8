@@ -1,0 +1,6 @@
+name: Demo
+description: Demo module to work on drupal skills
+package: Custom
+type: module
+core: 8.x
+version: 1.0
